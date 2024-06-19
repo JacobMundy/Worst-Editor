@@ -1,0 +1,103 @@
+[gd_scene load_steps=6 format=3 uid="uid://rxlgjbf6325h"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_5tgg4"]
+[ext_resource type="Script" path="res://TabContainer.gd" id="2_n6c4u"]
+[ext_resource type="Script" path="res://PopupControl.gd" id="3_700oh"]
+[ext_resource type="Script" path="res://LineCounter.gd" id="4_cdwkw"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8noul"]
+line_spacing = 4.0
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_5tgg4")
+
+[node name="AddTabButton" type="Button" parent="."]
+offset_left = 8.0
+offset_top = 3.0
+offset_right = 37.0
+offset_bottom = 34.0
+text = "+"
+
+[node name="TabContainer" type="TabContainer" parent="."]
+offset_left = 41.0
+offset_top = 1.0
+offset_right = 1151.0
+offset_bottom = 647.0
+tooltip_text = "+
+"
+script = ExtResource("2_n6c4u")
+
+[node name="New 1" type="TextEdit" parent="TabContainer"]
+layout_mode = 2
+
+[node name="WordCounter" type="Label" parent="."]
+offset_top = 624.0
+offset_right = 40.0
+offset_bottom = 647.0
+
+[node name="ChangeFileNameWindow" type="Window" parent="."]
+title = "Change File Name"
+position = Vector2i(500, 300)
+size = Vector2i(300, 100)
+visible = false
+
+[node name="PopupControl" type="Control" parent="ChangeFileNameWindow"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_700oh")
+
+[node name="OK" type="Button" parent="ChangeFileNameWindow/PopupControl"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -38.0
+offset_top = -18.0
+offset_right = -30.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "OK"
+
+[node name="LineEdit" type="LineEdit" parent="ChangeFileNameWindow/PopupControl"]
+custom_minimum_size = Vector2(300, 1)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -40.76
+offset_right = 300.0
+offset_bottom = -1.65004
+grow_vertical = 2
+placeholder_text = "New Name"
+
+[node name="CANCEL" type="Button" parent="ChangeFileNameWindow/PopupControl"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -127.44
+offset_top = -41.23
+offset_right = -67.4393
+offset_bottom = -10.23
+grow_horizontal = 0
+grow_vertical = 0
+text = "Cancel"
+
+[node name="LineCounter" type="Label" parent="."]
+offset_left = 1.0
+offset_top = 38.0
+offset_right = 41.0
+offset_bottom = 269.0
+text = "1"
+label_settings = SubResource("LabelSettings_8noul")
+horizontal_alignment = 2
+script = ExtResource("4_cdwkw")
