@@ -1,21 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://rxlgjbf6325h"]
+[gd_scene load_steps=5 format=3 uid="uid://rxlgjbf6325h"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_5tgg4"]
 [ext_resource type="Script" path="res://TabContainer.gd" id="2_n6c4u"]
 [ext_resource type="Script" path="res://PopupControl.gd" id="3_700oh"]
 [ext_resource type="Script" path="res://LineCounter.gd" id="4_cdwkw"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_8noul"]
-line_spacing = 4.0
-
 [node name="Main" type="Node2D"]
 script = ExtResource("1_5tgg4")
 
 [node name="AddTabButton" type="Button" parent="."]
 offset_left = 8.0
-offset_top = 3.0
+offset_top = 1.0
 offset_right = 37.0
-offset_bottom = 34.0
+offset_bottom = 32.0
 text = "+"
 
 [node name="TabContainer" type="TabContainer" parent="."]
@@ -92,12 +89,17 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "Cancel"
 
-[node name="LineCounter" type="Label" parent="."]
+[node name="LineCounter" type="TextEdit" parent="."]
 offset_left = 1.0
-offset_top = 38.0
-offset_right = 41.0
-offset_bottom = 269.0
+offset_top = 32.0
+offset_right = 40.0
+offset_bottom = 647.0
 text = "1"
-label_settings = SubResource("LabelSettings_8noul")
-horizontal_alignment = 2
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
 script = ExtResource("4_cdwkw")
