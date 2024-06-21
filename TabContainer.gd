@@ -7,7 +7,9 @@ extends TabContainer
 @onready var save_file_dialog = get_node("../SaveFileDialog")
 @onready var open_file_dialog = get_node("../OpenFileDialog")
 
-
+# TODO: closing file needs to ask if file should be saved 
+# TODO: add command pallete that shows different commands
+# TODO: add word counter
 var last_time_clicked = 0
 var double_click_threshold = 0.15
 var directories = {}
