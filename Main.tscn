@@ -29,7 +29,7 @@ layout_mode = 2
 
 [node name="WordCounter" type="Label" parent="."]
 offset_top = 624.0
-offset_right = 40.0
+offset_right = 1.0
 offset_bottom = 647.0
 
 [node name="ChangeFileNameWindow" type="Window" parent="."]
@@ -89,19 +89,15 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "Cancel"
 
-[node name="LineCounter" type="TextEdit" parent="."]
+[node name="LineCounter" type="RichTextLabel" parent="."]
 offset_left = 1.0
-offset_top = 32.0
+offset_top = 38.0
 offset_right = 40.0
-offset_bottom = 647.0
+offset_bottom = 645.0
+bbcode_enabled = true
 text = "1"
-editable = false
-context_menu_enabled = false
 shortcut_keys_enabled = false
-selecting_enabled = false
 drag_and_drop_selection_enabled = false
-virtual_keyboard_enabled = false
-middle_mouse_paste_enabled = false
 script = ExtResource("4_cdwkw")
 
 [node name="SaveFileDialog" type="FileDialog" parent="."]
