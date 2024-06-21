@@ -14,7 +14,8 @@ func _ready():
 	self.add_theme_constant_override("line_spacing", 4)
 	self.get_v_scroll_bar().modulate = 0
 
-func _process(delta):
+# 
+func _process(_delta):
 	if text_edit != null:
 		# Sync the scroll position of LineCounter with text_edit
 		if text_edit.scroll_vertical != last_text_edit_scroll:
