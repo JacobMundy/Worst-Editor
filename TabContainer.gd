@@ -4,8 +4,10 @@ extends TabContainer
 @onready var popup_window = get_node("../ChangeFileNameWindow")
 @onready var popup_control = get_node("../ChangeFileNameWindow/PopupControl")
 @onready var line_counter = get_node("../LineCounter")
+@onready var word_counter = get_node("../WordCounter")
 @onready var save_file_dialog = get_node("../SaveFileDialog")
 @onready var open_file_dialog = get_node("../OpenFileDialog")
+@onready var command_palette = get_node("../CommandPalette")
 
 # TODO: closing file needs to ask if file should be saved 
 # TODO: add command pallete that shows different commands
@@ -113,6 +115,7 @@ func _on_file_selected(path):
 func save_file(path):
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	if file:
+		
 		var text_editor = self.get_child(current_tab)
 		file.store_string(text_editor.text)
 		file.close()
@@ -130,6 +133,8 @@ func set_tab_name(new_name):
 func _on_tab_change(tab_index):
 	var text_edit = get_child(tab_index)
 	line_counter.set_new_text_edit(text_edit)
+	word_counter.set_new_text_edit(text_edit)
+	
 
 func _on_tab_clicked(tab_index):
 	var text_edit = get_child(tab_index)
