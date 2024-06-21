@@ -5,8 +5,7 @@ var text_edit
 var connected_editors = []
 
 @onready var label_scroll_container = get_parent()
-var last_self_scroll = -1
-var last_text_edit_scroll = -1
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
