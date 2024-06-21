@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://rxlgjbf6325h"]
+[gd_scene load_steps=7 format=3 uid="uid://rxlgjbf6325h"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_5tgg4"]
 [ext_resource type="Script" path="res://TabContainer.gd" id="2_n6c4u"]
 [ext_resource type="Script" path="res://PopupControl.gd" id="3_700oh"]
+[ext_resource type="Script" path="res://WordCounter.gd" id="3_ltlx6"]
 [ext_resource type="Script" path="res://LineCounter.gd" id="4_cdwkw"]
+[ext_resource type="Script" path="res://CommandPalette.gd" id="5_axf3m"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_5tgg4")
@@ -19,18 +21,13 @@ text = "+"
 offset_left = 41.0
 offset_top = 1.0
 offset_right = 1151.0
-offset_bottom = 647.0
-tooltip_text = "+
+offset_bottom = 624.0
+tooltip_text = "
 "
 script = ExtResource("2_n6c4u")
 
 [node name="New 1" type="TextEdit" parent="TabContainer"]
 layout_mode = 2
-
-[node name="WordCounter" type="Label" parent="."]
-offset_top = 624.0
-offset_right = 1.0
-offset_bottom = 647.0
 
 [node name="ChangeFileNameWindow" type="Window" parent="."]
 title = "Change File Name"
@@ -95,7 +92,7 @@ offset_top = 38.0
 offset_right = 40.0
 offset_bottom = 645.0
 bbcode_enabled = true
-text = "1"
+text = "0"
 shortcut_keys_enabled = false
 drag_and_drop_selection_enabled = false
 script = ExtResource("4_cdwkw")
@@ -112,3 +109,30 @@ title = "Open a File"
 size = Vector2i(700, 350)
 ok_button_text = "Open"
 file_mode = 0
+
+[node name="CommandPalette" type="Window" parent="."]
+title = "Command Palette"
+position = Vector2i(330, 205)
+size = Vector2i(590, 350)
+visible = false
+script = ExtResource("5_axf3m")
+
+[node name="SearchPalette" type="LineEdit" parent="CommandPalette"]
+offset_right = 590.0
+offset_bottom = 36.25
+caret_blink = true
+
+[node name="CommandList" type="Tree" parent="CommandPalette"]
+offset_top = 37.76
+offset_right = 590.0
+offset_bottom = 357.76
+
+[node name="WordCounter" type="RichTextLabel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 417.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_ltlx6")
