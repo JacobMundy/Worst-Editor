@@ -3,7 +3,6 @@ extends TabContainer
 @onready var main = get_node("..")
 @onready var popup_window = get_node("../ChangeFileNameWindow")
 @onready var popup_control = get_node("../ChangeFileNameWindow/PopupControl")
-@onready var line_counter = get_node("../LineCounter")
 @onready var word_counter = get_node("../WordCounter")
 @onready var save_file_dialog = get_node("../SaveFileDialog")
 @onready var open_file_dialog = get_node("../OpenFileDialog")
@@ -89,7 +88,7 @@ func load_state():
 				self.get_child(0).text = state["tabs"][tab]
 				continue 
 				
-			var text_editor = TextEdit.new()
+			var text_editor = CodeEdit.new()
 			text_editor.name = tab
 			text_editor.text = state["tabs"][tab]
 			self.add_child(text_editor)
@@ -99,12 +98,12 @@ func load_state():
 func load_file(path):
 	var file = FileAccess.open(path, FileAccess.READ)
 	if file:
-		# Create and setup new TextEdit
-		var text_editor = TextEdit.new()
+		# Create and setup new CodeEdit
+		var text_editor = CodeEdit.new()
 		text_editor.name = path.get_file().get_basename()
 		text_editor.text = file.get_as_text()
 		
-		# Set the created TextEdit as first tab and focus it 
+		# Set the created CodeEdit as first tab and focus it 
 		self.add_child(text_editor)
 		self.move_child(text_editor, 0)
 		self.set_current_tab(0)
@@ -132,13 +131,11 @@ func set_tab_name(new_name):
 
 func _on_tab_change(tab_index):
 	var text_edit = get_child(tab_index)
-	line_counter.set_new_text_edit(text_edit)
 	word_counter.set_new_text_edit(text_edit)
 	
 
 func _on_tab_clicked(tab_index):
 	var text_edit = get_child(tab_index)
-	line_counter.set_new_text_edit(text_edit)
 	
 	# Logic for title change 
 	var now = Time.get_ticks_msec() / 1000.0  # Current time in seconds
