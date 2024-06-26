@@ -4,6 +4,7 @@ extends RichTextLabel
 var text_edit
 var connected_editors = []
 var update_timer: Timer
+var line
 
 @onready var label_scroll_container = get_parent()
 
@@ -20,7 +21,7 @@ func _ready():
 func schedule_update():
 	if !update_timer.is_stopped():
 		update_timer.stop()
-	update_timer.start(0.5)  # 0.5 second delay
+	update_timer.start(0.8)  # 0.5 second delay
 	
 func set_new_text_edit(provided_text_edit):
 	text_edit = provided_text_edit
@@ -52,15 +53,20 @@ func update_word_counter():
 func count_words(text):
 	# source: https://www.reddit.com/r/godot/comments/nyi132/how_to_count_words_in_a_string_without_counting/
 	# it appears to work, and it seems to work efficently at that
+
 	var linebreak_array = text.split("\n", false)
 	var lines = []
 	for i in linebreak_array:
-		lines.append(i)
+		line = i.replace("\t", "").strip_edges()
+		line = line.replace("\n","").strip_edges()
+		if line:
+			lines.append(line)
+		
 	var word_count = 0
 	for i in lines:
 		i = i.split(" ", false)
 		word_count += i.size()
-	print(lines)
+
 	return word_count
 
 
