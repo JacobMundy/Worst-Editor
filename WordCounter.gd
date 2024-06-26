@@ -25,7 +25,7 @@ func schedule_update():
 func set_new_text_edit(provided_text_edit):
 	text_edit = provided_text_edit
 	if text_edit not in connected_editors:
-		text_edit.connect("caret_changed", Callable(self, "on_text_changed"))
+		text_edit.connect("text_changed", Callable(self, "on_text_changed"))
 		
 		connected_editors.append(text_edit)
 	update_word_counter()
@@ -50,8 +50,19 @@ func update_word_counter():
 
 
 func count_words(text):
-	# Split the text by whitespace and filter out empty strings
-	return len(text.split(' ', true))
+	# source: https://www.reddit.com/r/godot/comments/nyi132/how_to_count_words_in_a_string_without_counting/
+	# it appears to work, and it seems to work efficently at that
+	var linebreak_array = text.split("\n", false)
+	var lines = []
+	for i in linebreak_array:
+		lines.append(i)
+	var word_count = 0
+	for i in lines:
+		i = i.split(" ", false)
+		word_count += i.size()
+	print(lines)
+	return word_count
+
 
 func count_characters(text):
 	# Remove all whitespace to get the count of non-whitespace characters
