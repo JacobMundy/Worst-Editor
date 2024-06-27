@@ -4,24 +4,35 @@ extends RichTextLabel
 var text_edit
 var connected_editors = []
 var update_timer: Timer
-var line
+var thread: Thread
+var mutex: Mutex
+var exit_thread := false
+var word_count := 0
+var character_count := 0
 
 @onready var label_scroll_container = get_parent()
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	set_new_text_edit(default_tab)
 	self.scroll_active = false
 	update_timer = Timer.new()
 	update_timer.one_shot = true
-	update_timer.timeout.connect(update_word_counter)
+	update_timer.timeout.connect(schedule_update)
 	add_child(update_timer)
 
+	mutex = Mutex.new()
+	thread = Thread.new()
+	thread.start(Callable(self, "_thread_function"))
+	set_new_text_edit(default_tab)
+
+func _exit_tree():
+	exit_thread = true
+	thread.wait_to_finish()
+
 func schedule_update():
-	if !update_timer.is_stopped():
-		update_timer.stop()
-	update_timer.start(0.8)  # 0.5 second delay
+	if update_timer.is_stopped():
+		update_timer.start(0.8)
 	
 func set_new_text_edit(provided_text_edit):
 	text_edit = provided_text_edit
@@ -29,22 +40,30 @@ func set_new_text_edit(provided_text_edit):
 		text_edit.connect("text_changed", Callable(self, "on_text_changed"))
 		
 		connected_editors.append(text_edit)
-	update_word_counter()
-	
+	schedule_update()
+
 # Connect this to your CodeEdit's "text_changed" signal
 func on_text_changed():
 	schedule_update()
-	
-func update_word_counter():
 
-	var text = text_edit.text
-	var word_count = 0
-	var character_count = 0
+func _thread_function():
+	while !exit_thread:
+		mutex.lock()
+		var current_text = text_edit.text if text_edit else ""
+		mutex.unlock()
 
-	if text != "":
-		word_count = count_words(text)
-		character_count = count_characters(text)
+		var local_word_count = count_words(current_text)
+		var local_character_count = count_characters(current_text)
 
+		mutex.lock()
+		word_count = local_word_count
+		character_count = local_character_count
+		mutex.unlock()
+
+		call_deferred("update_ui")
+		OS.delay_msec(1000)  # Small delay to prevent excessive CPU usage
+
+func update_ui():
 	var formatted_text = "Word Count: %7d   | Character Count: %7d" % [word_count, character_count]
 	set_text(formatted_text)
 
@@ -57,7 +76,7 @@ func count_words(text):
 	var linebreak_array = text.split("\n", false)
 	var lines = []
 	for i in linebreak_array:
-		line = i.replace("\t", "").strip_edges()
+		var line = i.replace("\t", "").strip_edges()
 		line = line.replace("\n","").strip_edges()
 		if line:
 			lines.append(line)
@@ -73,3 +92,4 @@ func count_words(text):
 func count_characters(text):
 	# Remove all whitespace to get the count of non-whitespace characters
 	return len(text.replace(' ', ''))
+
