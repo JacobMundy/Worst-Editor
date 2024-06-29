@@ -1,7 +1,7 @@
 extends Node2D
 
 @onready var tab_container = $TabContainer
-@onready var add_tab_button = $AddTabButton 
+#@onready var add_tab_button = $AddTabButton 
 @onready var word_counter = $WordCounter
 @onready var root = get_tree().root
 @onready var command_palette = $CommandPalette
@@ -14,7 +14,6 @@ signal request_close_tab
 
 func _ready():
 	# Connect the button's signal to a method
-	add_tab_button.connect("pressed", Callable(self, "_on_AddTabButton_pressed"))
 	root.connect("size_changed", Callable(self,"_on_window_resized"))
 	_on_window_resized()
 
@@ -37,13 +36,3 @@ func _on_window_resized():
 	tab_container.size = tab_container_size
 	word_counter.size = word_counter_size
 	word_counter.position = word_counter_position
-	
-
-func _on_AddTabButton_pressed():
-	# Logic to add a new tab to the TabContainer
-	var new_tab = CodeEdit.new()
-	tab_number += 1
-	new_tab.name = "New "  + str(tab_number)
-	word_counter.set_new_text_edit(new_tab)
-	tab_container.add_child(new_tab)
-	tab_container.call_deferred("set_current_tab", tab_container.get_tab_count() - 1)  # Switch to the new tab

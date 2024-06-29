@@ -7,10 +7,9 @@ extends TabContainer
 @onready var save_file_dialog = get_node("../SaveFileDialog")
 @onready var open_file_dialog = get_node("../OpenFileDialog")
 @onready var command_palette = get_node("../CommandPalette")
+@onready var file_button_menu = get_node("../FileMenuButton")
 
 # TODO: closing file needs to ask if file should be saved 
-# TODO: add command pallete that shows different commands
-# TODO: add word counter
 var last_time_clicked = 0
 var double_click_threshold = 0.15
 var directories = {}
@@ -23,9 +22,10 @@ func _ready():
 	connect("tab_changed", Callable(self, "_on_tab_change"))
 	save_file_dialog.connect("file_selected", Callable(self, "_on_file_selected"))
 	open_file_dialog.connect("file_selected", Callable(self, "load_file"))
+	file_button_menu.get_popup().connect("id_pressed", Callable(self, "_on_file_menu_item_pressed"))
 	load_state()
 
-
+# Detect one of the possible file commands
 func _input(event):
 	if Input.is_key_pressed(KEY_CTRL):
 		if event.is_action_released("close_current_tab") and len(self.get_children()) > 0:
@@ -41,8 +41,38 @@ func _input(event):
 				save_file_dialog.popup_centered()
 		elif event.is_action_released("open_file"):
 			open_file_dialog.popup_centered()
-			
-			
+
+# Add this new function to handle menu item selection
+func _on_file_menu_item_pressed(id):
+	match id:
+		0:  
+			_on_file_menu_new_pressed()
+		1:  
+			_on_file_menu_open_pressed()
+		2:  
+			_on_file_menu_save_pressed()
+
+func _on_file_menu_new_pressed():
+	# Logic to add a new tab
+	var new_tab = CodeEdit.new()
+	main.tab_number += 1
+	new_tab.name = "New " + str(main.tab_number)
+	word_counter.set_new_text_edit(new_tab)
+	add_child(new_tab)
+	call_deferred("set_current_tab", get_tab_count() - 1)  # Switch to the new tab
+
+func _on_file_menu_open_pressed():
+	open_file_dialog.popup_centered()
+
+func _on_file_menu_save_pressed():
+	var selected_tab = get_child(current_tab)
+	var file_path = selected_tab.name
+	if file_path in directories and FileAccess.file_exists(directories[file_path]):
+		save_file(directories[file_path])
+	else:
+		# Open the FileDialog for the user to select a save location
+		save_file_dialog.set_mode(FileDialog.FILE_MODE_SAVE_FILE)
+		save_file_dialog.popup_centered()
 
 # Detect close and try to save state
 func _notification(what):
