@@ -16,10 +16,6 @@ var character_count := 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.scroll_active = false
-	update_timer = Timer.new()
-	update_timer.one_shot = true
-	update_timer.timeout.connect(schedule_update)
-	add_child(update_timer)
 
 	mutex = Mutex.new()
 	thread = Thread.new()
@@ -31,8 +27,7 @@ func _exit_tree():
 	thread.wait_to_finish()
 
 func schedule_update():
-	if update_timer.is_stopped():
-		update_timer.start(0.8)
+	update_ui()
 	
 func set_new_text_edit(provided_text_edit):
 	text_edit = provided_text_edit
@@ -61,7 +56,7 @@ func _thread_function():
 		mutex.unlock()
 
 		call_deferred("update_ui")
-		OS.delay_msec(1000)  # Small delay to prevent excessive CPU usage
+		OS.delay_msec(500)  # Small delay to prevent excessive CPU usage
 
 func update_ui():
 	var formatted_text = "Word Count: %7d   | Character Count: %7d" % [word_count, character_count]
