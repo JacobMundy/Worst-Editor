@@ -86,5 +86,7 @@ func count_words(text):
 
 func count_characters(text):
 	# Remove all whitespace to get the count of non-whitespace characters
-	return len(text.replace(' ', ''))
+	text = text.replace("\t", "")
+	text = text.replace("\n", "")
+	return len(text)
 
