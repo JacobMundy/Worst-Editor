@@ -3,6 +3,7 @@ extends Control
 
 @onready var tab_container = get_node("../../TabContainer")
 @onready var parent_window = get_node("..")
+
 var tab_idx = null
 
 # Called when the node enters the scene tree for the first time.
@@ -28,5 +29,5 @@ func _on_CANCEL_pressed():
 	parent_window.visible = false 
 
 func _on_text_submission(submitted_text):
-	tab_container.set_tab_title(tab_idx, submitted_text)
+	tab_container.set_tab_name(submitted_text)
 	parent_window.visible = false
