@@ -38,11 +38,12 @@ func _input(event):
 			else:
 				# Open the FileDialog for the user to select a save location
 				save_file_dialog.set_mode(FileDialog.FILE_MODE_SAVE_FILE)
+				save_file_dialog.current_file = selected_tab.name
 				save_file_dialog.popup_centered()
 		elif event.is_action_released("open_file"):
 			open_file_dialog.popup_centered()
 
-# Add this new function to handle menu item selection
+# Adds function to buttons on File Menu Dropdown
 func _on_file_menu_item_pressed(id):
 	match id:
 		0:  
@@ -72,6 +73,7 @@ func _on_file_menu_save_pressed():
 	else:
 		# Open the FileDialog for the user to select a save location
 		save_file_dialog.set_mode(FileDialog.FILE_MODE_SAVE_FILE)
+		save_file_dialog.current_file = selected_tab.name + ".txt"
 		save_file_dialog.popup_centered()
 
 # Detect close and try to save state
@@ -88,6 +90,7 @@ func save_state():
 	state["stored_directories"] = directories
 	
 	for i in range(self.get_child_count()):
+		print(self.get_child(i).name)
 		state["tabs"][self.get_child(i).name] = self.get_child(i).text
 	
 	var saved_state = FileAccess.open("user://tabs_state.json", FileAccess.ModeFlags.WRITE)
@@ -157,7 +160,35 @@ func save_file(path):
 
 func set_tab_name(new_name):
 	var selected_tab = self.get_child(current_tab)
-	selected_tab.name = new_name
+	var old_name = selected_tab.name
+	
+	
+	# Update the directories dictionary
+	if old_name in directories:
+		var old_path = directories[old_name]
+		var new_path = old_path.get_base_dir().path_join(new_name + "." + old_path.get_extension())
+
+		# Attempt to rename the file
+		var dir = DirAccess.open(old_path.get_base_dir())
+		if dir:
+			var err = dir.rename(old_path, new_path)
+			if err == OK:
+				# File renamed successfully
+				directories[new_name] = new_path
+				directories.erase(old_name)
+				selected_tab.name = new_name
+				set_tab_title(current_tab, new_name)
+			else:
+				# Failed to rename file
+				print("Failed to rename file: ", error_string(err))
+				return
+		else:
+			print("Unable to access directory")
+			return
+	else:
+		# This tab isn't associated with a file yet, just update the tab
+		selected_tab.name = new_name
+		set_tab_title(current_tab, new_name)
 
 func _on_tab_change(tab_index):
 	var text_edit = get_child(tab_index)
