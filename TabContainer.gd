@@ -8,8 +8,10 @@ extends TabContainer
 @onready var open_file_dialog = get_node("../OpenFileDialog")
 @onready var command_palette = get_node("../CommandPalette")
 @onready var file_button_menu = get_node("../FileMenuButton")
+@onready var save_file_confirmation = get_node("../SaveFileConfirmation")
 
-# TODO: closing file needs to ask if file should be saved 
+# TODO: make sure user cant call tab same name 
+# TODO: show error dialogs to user if something like above occurs.
 var last_time_clicked = 0
 var double_click_threshold = 0.15
 var directories = {}
@@ -29,7 +31,7 @@ func _ready():
 func _input(event):
 	if Input.is_key_pressed(KEY_CTRL):
 		if event.is_action_released("close_current_tab") and len(self.get_children()) > 0:
-			self.get_child(current_tab).queue_free()
+			close_file()
 		elif event.is_action_released("save_file"):
 			var selected_tab = self.get_child(current_tab)
 			var file_path = selected_tab.name
@@ -52,6 +54,8 @@ func _on_file_menu_item_pressed(id):
 			_on_file_menu_open_pressed()
 		2:  
 			_on_file_menu_save_pressed()
+		3: 
+			close_file()
 
 func _on_file_menu_new_pressed():
 	# Logic to add a new tab
@@ -112,8 +116,7 @@ func load_state():
 		if len(state["tabs"]) > 0:
 			if "New 1" not in state["tabs"]:
 				self.get_child(0).queue_free()
-				
-		
+
 
 		# Load in the saved tabs
 		for tab in state["tabs"]:
@@ -121,7 +124,11 @@ func load_state():
 				self.get_child(0).text = state["tabs"][tab]
 				continue 
 				
+			# Create CodeEdits and change their settings
+			# TODO: allow user to change settings like line-number
+			# TODO: save these settings in JSON and implement them here and other places
 			var text_editor = CodeEdit.new()
+			text_editor.gutters_draw_line_numbers = true
 			text_editor.name = tab
 			text_editor.text = state["tabs"][tab]
 			self.add_child(text_editor)
@@ -140,6 +147,18 @@ func load_file(path):
 		self.add_child(text_editor)
 		self.move_child(text_editor, 0)
 		self.set_current_tab(0)
+
+func close_file(skip_confirmation = false):
+	var selected_file = self.get_child(current_tab)
+	if skip_confirmation:
+		selected_file.queue_free()
+	elif len(self.get_children()) > 0:
+		if selected_file.name in directories:
+			save_file(directories[selected_file.name])
+		elif len(selected_file.text) > 0:
+			save_file_confirmation.popup_centered()
+		else:
+			selected_file.queue_free()
 
 func _on_file_selected(path):
 	save_file(path)
@@ -193,10 +212,9 @@ func set_tab_name(new_name):
 func _on_tab_change(tab_index):
 	var text_edit = get_child(tab_index)
 	word_counter.set_new_text_edit(text_edit)
-	
+	word_counter.force_update_ui()
 
 func _on_tab_clicked(tab_index):
-	var text_edit = get_child(tab_index)
 	
 	# Logic for title change 
 	var now = Time.get_ticks_msec() / 1000.0  # Current time in seconds

@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://rxlgjbf6325h"]
+[gd_scene load_steps=7 format=3 uid="uid://rxlgjbf6325h"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_5tgg4"]
 [ext_resource type="Script" path="res://TabContainer.gd" id="2_n6c4u"]
 [ext_resource type="Script" path="res://PopupControl.gd" id="3_700oh"]
 [ext_resource type="Script" path="res://WordCounter.gd" id="3_ltlx6"]
 [ext_resource type="Script" path="res://CommandPalette.gd" id="5_axf3m"]
+[ext_resource type="Script" path="res://SaveFileConfirmation.gd" id="6_t52rx"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_5tgg4")
@@ -78,6 +79,47 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "Cancel"
 
+[node name="SaveFileConfirmation" type="Window" parent="."]
+size = Vector2i(300, 100)
+visible = false
+script = ExtResource("6_t52rx")
+
+[node name="Control" type="Control" parent="SaveFileConfirmation"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Yes" type="Button" parent="SaveFileConfirmation/Control"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 50.0
+offset_right = 80.0
+offset_bottom = 81.0
+text = "Yes"
+
+[node name="No" type="Button" parent="SaveFileConfirmation/Control"]
+offset_left = 100.0
+offset_top = 50.0
+offset_right = 170.0
+offset_bottom = 81.0
+text = "No"
+
+[node name="Cancel" type="Button" parent="SaveFileConfirmation/Control"]
+offset_left = 196.91
+offset_top = 50.0
+offset_right = 266.91
+offset_bottom = 81.0
+text = "Cancel"
+
+[node name="Label" type="Label" parent="SaveFileConfirmation/Control"]
+layout_mode = 0
+offset_left = 101.835
+offset_top = 9.845
+offset_right = 175.835
+offset_bottom = 32.845
+text = "Save File?"
+
 [node name="SaveFileDialog" type="FileDialog" parent="."]
 position = Vector2i(245, 215)
 size = Vector2i(700, 350)
@@ -129,10 +171,12 @@ offset_right = 104.0
 offset_bottom = 32.0
 text = "File"
 flat = false
-item_count = 3
+item_count = 4
 popup/item_0/text = "New File"
 popup/item_0/id = 0
 popup/item_1/text = "Open File"
 popup/item_1/id = 1
 popup/item_2/text = "Save File"
 popup/item_2/id = 2
+popup/item_3/text = "Close File"
+popup/item_3/id = 3

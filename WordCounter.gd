@@ -28,7 +28,7 @@ func _exit_tree():
 
 func schedule_update():
 	update_ui()
-	
+
 func set_new_text_edit(provided_text_edit):
 	text_edit = provided_text_edit
 	if text_edit not in connected_editors:
@@ -62,13 +62,19 @@ func update_ui():
 	var formatted_text = "Word Count: %7d   | Character Count: %7d" % [word_count, character_count]
 	set_text(formatted_text)
 
+func force_update_ui():
+	var current_text = text_edit.text if text_edit else ""
+	word_count = count_words(current_text)
+	character_count = count_characters(current_text)
+	var formatted_text = "Word Count: %7d   | Character Count: %7d" % [word_count, character_count]
+	set_text(formatted_text)
 
 
-func count_words(text):
+func count_words(string):
 	# source: https://www.reddit.com/r/godot/comments/nyi132/how_to_count_words_in_a_string_without_counting/
 	# it appears to work, and it seems to work efficently at that
 
-	var linebreak_array = text.split("\n", false)
+	var linebreak_array = string.split("\n", false)
 	var lines = []
 	for i in linebreak_array:
 		var line = i.replace("\t", "").strip_edges()
@@ -76,7 +82,7 @@ func count_words(text):
 		if line:
 			lines.append(line)
 		
-	var word_count = 0
+	word_count = 0
 	for i in lines:
 		i = i.split(" ", false)
 		word_count += i.size()
@@ -84,9 +90,9 @@ func count_words(text):
 	return word_count
 
 
-func count_characters(text):
+func count_characters(string):
 	# Remove all whitespace to get the count of non-whitespace characters
-	text = text.replace("\t", "")
-	text = text.replace("\n", "")
-	return len(text)
+	string = string.replace("\t", "")
+	string = string.replace("\n", "")
+	return len(string)
 

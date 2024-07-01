@@ -1,7 +1,6 @@
 extends Node2D
 
 @onready var tab_container = $TabContainer
-#@onready var add_tab_button = $AddTabButton 
 @onready var word_counter = $WordCounter
 @onready var root = get_tree().root
 @onready var command_palette = $CommandPalette
@@ -13,7 +12,6 @@ signal request_close_tab
 
 
 func _ready():
-	# Connect the button's signal to a method
 	root.connect("size_changed", Callable(self,"_on_window_resized"))
 	_on_window_resized()
 
@@ -29,7 +27,6 @@ func _input(event):
 func _on_window_resized():
 	var window_size = root.size
 	var tab_container_size = Vector2(window_size.x, window_size.y - 70)  # Leave 30 pixels at the bottom for WordCounter
-	var line_counter_size = Vector2(40, window_size.y - 30)
 	var word_counter_size = Vector2(window_size.x, 30)
 	var word_counter_position = Vector2(window_size.x - 400, window_size.y - 30)
 
