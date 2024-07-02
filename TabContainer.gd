@@ -60,6 +60,7 @@ func _on_file_menu_item_pressed(id):
 func _on_file_menu_new_pressed():
 	# Logic to add a new tab
 	var new_tab = CodeEdit.new()
+	new_tab.gutters_draw_line_numbers = true
 	main.tab_number += 1
 	new_tab.name = "New " + str(main.tab_number)
 	word_counter.set_new_text_edit(new_tab)
